@@ -21,20 +21,20 @@ jobs:
         env:
           PWD: ${{ secrets.PWD }}
         run: |
-          # TIMESTAMP=$(TZ="America/Sao_Paulo" date +%Y%m%d_%H%M%S)
-          # BACKUP_NAME="backup_$TIMESTAMP.sql"
-          # ZIP_NAME="backup_$TIMESTAMP.zip"
+          TIMESTAMP=$(TZ="America/Sao_Paulo" date +%Y%m%d_%H%M%S)
+          BACKUP_NAME="backup_$TIMESTAMP.sql"
+          ZIP_NAME="backup_$TIMESTAMP.zip"
 
-           pg_dump -h ${{ secrets.HOST }} \
-                   -p ${{ secrets.PORT }} \
-                   -U ${{ secrets.USER }} \
-                   -d ${{ secrets.DATABASE }} \
-                   --no-password \
-                   -f $BACKUP_NAME
+          pg_dump -h ${{ secrets.HOST }} \
+                  -p ${{ secrets.PORT }} \
+                  -U ${{ secrets.USER }} \
+                  -d ${{ secrets.DATABASE }} \
+                  --no-password \
+                  -f $BACKUP_NAME
 
-           zip $ZIP_NAME $BACKUP_NAME
+          zip $ZIP_NAME $BACKUP_NAME
 
-           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
       - name: Upload on google drive
         uses: adityak74/google-drive-upload-git-action@main
