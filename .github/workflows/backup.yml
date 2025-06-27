@@ -9,7 +9,7 @@ on:
 
 jobs:
   SysCall-Backup:
-    runs-on: ubutu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
