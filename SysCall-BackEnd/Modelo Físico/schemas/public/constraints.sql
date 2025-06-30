@@ -1,3 +1,4 @@
+ --CHECK CONSTRAINTS DA TABELA call_user
  -- Garante que o nome seja maior que três caracteres 
  ALTER TABLE public.call_user 
  ADD CONSTRAINT 
@@ -6,7 +7,7 @@
     char_length(name)> 3
  );
  
- -- Garante que o sobrenome seja diferente do nome 
+ -- Garante que o sobrenome seja diferente do nome e que o sobrenome tenha no mínimo 2 caaracteres 
  ALTER TABLE public.call_user 
  ALTER CONSTRAINT 
  check_s_public_t_call_user_c_lastname
@@ -52,3 +53,32 @@
  CHECK (
     email SIMILAR TO '%@(gmail.com|yahoo.com|outlook.com|baymetrics.com)%'
  );
+
+ -- Garante que a senha tenha no mínimo 12 caracteres, tenha pelo menos 1 letra minúscula, pelo menos 1 maiúsucula, se contém pelo menos 1 número e no mínimo 1 caractere especial
+
+ ALTER TABLE public.call_user
+ ADD CONSTRAINT
+ check_s_public_t_call_user_c_password
+ CHECK(
+   LENGTH(password) >= 12  AND
+        password ~ '[A-Z]' AND               
+        password ~ '[a-z]' AND               
+        password ~ '[0-9]' AND               
+        password ~ '[!@#\$%\^&\*\(\)]'  
+);
+
+-- CHECK CONSTRAINTS DA TABELA contact
+
+-- Garante que o status seja U ou B (Unblocked ou Blocked)
+ALTER TABLE public.contact 
+ADD CONSTRAINT check_s_public_t_contact_c_status
+CHECK(
+   status IN ('U', 'B') 
+);
+
+-- CHECK CONSTRAINTS DA TABELA call_history 
+ALTER TABLE public.call_history 
+ADD CONSTRAINT check_s_public_t_call_history_c_status
+CHECK(
+   status IN ('A', 'R')
+);
