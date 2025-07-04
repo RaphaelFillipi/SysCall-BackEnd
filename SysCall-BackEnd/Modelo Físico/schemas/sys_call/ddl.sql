@@ -1,10 +1,10 @@
-DROP IF EXISTS SCHEMA public;
-CREATE SCHEMA public;
+DROP IF EXISTS SCHEMA sys_call;
+CREATE SCHEMA sys_call;
 
 
   -- CRIANDO TABELA DO USUÁRIO 
 
-CREATE TABLE public.call_user(
+CREATE TABLE sys_call.call_user(
   -- Chaves primárias
   user_id INTEGER GENERATED ALWAYS AS IDENTITY,
  
@@ -21,17 +21,17 @@ CREATE TABLE public.call_user(
   CONSTRAINT pk_s_auth_t_user PRIMARY KEY (user_id),
  
   -- Declaração de chaves únicas 
-  CONSTRAINT uq_s_public_t_call_user_c_telephone UNIQUE (telephone),
-  CONSTRAINT uq_s_public_t_call_user_c_email     UNIQUE (email), 
+  CONSTRAINT uq_s_sys_call_t_call_user_c_telephone UNIQUE (telephone),
+  CONSTRAINT uq_s_sys_call_t_call_user_c_email     UNIQUE (email), 
  
   -- Declaração de chaves únicas compostas 
-  CONSTRAINT cuq_s_public_t_call_user_c_email    UNIQUE (user_id, picture)
+  CONSTRAINT cuq_s_sys_call_t_call_user_c_email    UNIQUE (user_id, picture)
  
  );
 
  -- CRIANDO TABELA DE CONTATOS
 
-  CREATE TABLE public.contact(
+  CREATE TABLE sys_call.contact(
   -- Chaves primárias 
   id INTEGER GENERATED ALWAYS AS IDENTITY, 
   
@@ -44,18 +44,18 @@ CREATE TABLE public.call_user(
   owner_user INTEGER     NOT NULL,
   
   -- Declaração das chaves primárias 
-  CONSTRAINT s_public_t_contact PRIMARY KEY (id),
+  CONSTRAINT s_sys_call_t_contact PRIMARY KEY (id),
   
   -- Declaração de chaves estrangeiras 
-  CONSTRAINT fk_s_public_t_call_user_c_saved_user
+  CONSTRAINT fk_s_sys_call_t_call_user_c_saved_user
     FOREIGN KEY (saved_user)
-    REFERENCES public.call_user(user_id)
+    REFERENCES sys_call.call_user(user_id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT, 
     
-  CONSTRAINT fk_s_public_t_call_user_c_owner_user
+  CONSTRAINT fk_s_sys_call_t_call_user_c_owner_user
     FOREIGN KEY (owner_user)
-    REFERENCES public.call_user(user_id)
+    REFERENCES sys_call.call_user(user_id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT
  );
@@ -63,7 +63,7 @@ CREATE TABLE public.call_user(
 
 -- CRIANDO A TABELA DE HISTORICO DE CONTATOS 
 
- CREATE TABLE public.call_history(
+ CREATE TABLE sys_call.call_history(
  -- Chaves primárias
  id INTEGER GENERATED ALWAYS AS IDENTITY,
  
@@ -76,18 +76,18 @@ CREATE TABLE public.call_user(
  requester_user INTEGER NOT NULL,
  
  -- Declaração das chaves primárias 
- CONSTRAINT s_public_t_call_history PRIMARY KEY (id),
+ CONSTRAINT s_sys_call_t_call_history PRIMARY KEY (id),
  
  -- Declaração das chaves estrangeiras 
- CONSTRAINT fk_s_public_t_call_history_c_recived_user
+ CONSTRAINT fk_s_sys_call_t_call_history_c_recived_user
     FOREIGN KEY (recived_user)
-    REFERENCES public.call_user(user_id)
+    REFERENCES sys_call.call_user(user_id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT,
  
- CONSTRAINT fk_s_public_t_call_history_c_requester_user
+ CONSTRAINT fk_s_sys_call_t_call_history_c_requester_user
     FOREIGN KEY (requester_user)
-    REFERENCES public.call_user(user_id)
+    REFERENCES sys_call.call_user(user_id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT
  );

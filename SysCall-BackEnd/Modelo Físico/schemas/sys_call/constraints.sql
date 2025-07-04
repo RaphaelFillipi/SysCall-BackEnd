@@ -1,23 +1,23 @@
  -- Garante que o nome seja maior que três caracteres 
- ALTER TABLE public.call_user 
+ ALTER TABLE sys_call.call_user 
  ADD CONSTRAINT 
- check_s_public_t_call_user_c_name
+ check_s_sys_call_t_call_user_c_name
  CHECK (
-    char_length(name)> 3
+    char_length(name)>= 3
  );
  
  -- Garante que o sobrenome seja diferente do nome 
- ALTER TABLE public.call_user 
- ALTER CONSTRAINT 
- check_s_public_t_call_user_c_lastname
+ ALTER TABLE sys_call.call_user 
+ ADD CONSTRAINT 
+ check_s_sys_call_t_call_user_c_lastname
  CHECK (
-    last_name IS DISTINCT FROM name AND char_length(name) > 2
+    last_name IS DISTINCT FROM name AND char_length(name) >= 2
  );
  
  -- Garante que os dois primeiros digitos do telefone serão um DDD válido no Brasil
- ALTER TABLE public.call_user 
+ ALTER TABLE sys_call.call_user 
  ADD CONSTRAINT 
- check_s_public_t_call_user_c_telephone 
+ check_s_sys_call_t_call_user_c_telephone 
  CHECK (
     left(telephone, 2) IN  (
     '11','12','13','14','15','16','17','18','19',
@@ -46,9 +46,9 @@
  );
  
  -- Garante que o email sera gmail, outlook, baymetrics ou yahoo
- ALTER TABLE public.call_user 
+ ALTER TABLE sys_call.call_user 
  ADD CONSTRAINT 
- check_s_public_t_call_user_c_email
+ check_s_sys_call_t_call_user_c_email
  CHECK (
     email SIMILAR TO '%@(gmail.com|yahoo.com|outlook.com|baymetrics.com)%'
  );
