@@ -50,13 +50,110 @@ CREATE OR REPLACE TRIGGER
 view_update_trigger_t_call_user_r_sys_reg_usr
 INSTEAD OF UPDATE ON sys_call.view_update_t_call_user_r_sys_reg_usr
 FOR EACH ROW
-EXECUTE FUNCTION sys_call.view_update_function_t_call_user_r_sys_reg_usr;
+EXECUTE FUNCTION sys_call.view_update_function_t_call_user_r_sys_reg_usr();
 
+-- DELETAR PERFIL 
+SET ROLE sys_reg_usr;
 
+CREATE OR REPLACE PROCEDURE 
+sys_call.procedure_delete_t_call_user_r_sys_reg_usr(id INTEGER) AS $$
+BEGIN 
+    DELETE FROM sys_call.call_user
+    WHERE user_id = id;
+END;
+$$
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sys_call, pg_temp;
 
+-- =========== CONTACT TABLE ============
+
+-- ADICIONAR CONTATO
+
+CREATE OR REPLACE VIEW sys_call.view_insert_t_contact_r_sys_reg_usr AS 
+SELECT saved_name, saved_user, owner_user
+FROM sys_call.contact;
+
+SET ROLE sys_reg_usr;
+CREATE OR REPLACE FUNCTION 
+sys_call.view_insert_function_t_contact_r_sys_reg_usr()
+RETURNS trigger AS $$
+BEGIN 
+    INSERT INTO sys_call.contact (saved_name, saved_user, owner_user) 
+    VALUES (NEW.saved_name, NEW.saved_user, NEW.owner_user);
+    RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sys_call, pg_temp;
+RESET ROLE;
+
+CREATE OR REPLACE TRIGGER view_insert_trigger_t_contact_r_sys_reg_usr
+INSTEAD OF INSERT ON sys_call.view_insert_t_contact_r_sys_reg_usr
+FOR EACH ROW
+EXECUTE FUNCTION sys_call.view_insert_function_t_contact_r_sys_reg_usr();
+
+-- VER CONTATO 
+SET ROLE sys_reg_usr;
+CREATE OR REPLACE FUNCTION 
+sys_call.function_select_t_contact_r_sys_reg_usr(contact_id INTEGER)
+RETURNS TABLE(id INTEGER, saved_name VARCHAR(32), saved_user INTEGER, owner_user INTEGER) AS $$
+BEGIN 
+    RETURN QUERY 
+    SELECT 
+        sys_call.id, sys_call.saved_name, sys_call.saved_user, sys_call.owner_user
+    FROM sys_call.contact sys_call
+    WHERE sys_call.id = contact_id;
+END;
+$$
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sys_call, pg_temp;
+RESET ROLE;
+
+-- EDITAR CONTATO
+
+CREATE OR REPLACE VIEW sys_call.view_update_t_contact_r_sys_reg_usr AS
+SELECT id, saved_name, status 
+FROM sys_call.contact;
+
+CREATE OR REPLACE FUNCTION 
+sys_call.view_update_function_t_contact_r_sys_reg_usr()
+RETURNS TRIGGER AS $$ 
+BEGIN 
+    UPDATE sys_call.contact
+        SET saved_name = COALESCE(NEW.saved_name, saved_name),
+            status = COALESCE(NEW.status, status),
+        WHERE id = OLD.id;
+
+		RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sys_call, pg_temp;
+
+CREATE OR REPLACE TRIGGER 
+view_update_trigger_t_contact_r_sys_reg_usr
+INSTEAD OF UPDATE ON sys_call.view_update_t_contact_r_sys_reg_usr
+FOR EACH ROW
+EXECUTE FUNCTION sys_call.view_update_function_t_contact_r_sys_reg_usr();
 
 REVOKE CREATE 
     ON SCHEMA sys_call
     FROM sys_reg_usr;
 
+-- DELETAR CONTATO
+
+CREATE OR REPLACE PROCEDURE 
+sys_call.procedure_delete_t_contact_r_sys_reg_usr(contact_id INTEGER) AS $$
+BEGIN 
+    DELETE FROM sys_call.contact
+    WHERE id = contact_id;
+END;
+$$
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sys_call, pg_temp;
 

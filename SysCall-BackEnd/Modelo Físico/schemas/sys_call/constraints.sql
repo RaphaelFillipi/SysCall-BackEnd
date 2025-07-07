@@ -52,3 +52,27 @@
  CHECK (
     email SIMILAR TO '%@(gmail.com|yahoo.com|outlook.com|baymetrics.com)%'
  );
+
+ -- Garante que a senha cumpra os requisitos
+ ALTER TABLE sys_call.call_user
+ ADD CONSTRAINT 
+ check_s_sys_call_t_call_user_c_password
+ CHECK (
+   LENGTH(password) >= 12 AND
+        password ~ '[a-z]' AND
+        password ~ '[A-Z]' AND
+        password ~ '[0-9]' AND
+        password ~ '[^a-zA-Z0-9]'
+ );
+
+ -- Garante que o status do contato seja sempre U ou D (Unblocked ou Blocked)
+ ALTER TABLE sys_call.contact
+ ADD CONSTRAINT check_s_sys_call_t_contact_c_status
+ CHECK (status IN('U', 'B'));
+
+ -- Garante que o status do historico de ligações seja sempre R ou A (Refused ou Accepted)
+ ALTER TABLE sys_call.contact
+ ADD CONSTRAINT check_s_sys_call_t_contact_c_status
+ CHECK (status IN('R', 'A'));
+
+ 

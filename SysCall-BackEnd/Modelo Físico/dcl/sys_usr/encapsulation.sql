@@ -26,7 +26,7 @@ RESET ROLE;
 CREATE OR REPLACE TRIGGER view_insert_trigger_t_call_user_r_sys_usr
 INSTEAD OF INSERT ON sys_call.view_insert_t_call_user_r_sys_usr
 FOR EACH ROW
-EXECUTE FUNCTION sys_call.view_insert_function_t_call_user_r_sys_usr;
+EXECUTE FUNCTION sys_call.view_insert_function_t_call_user_r_sys_usr();
 
 
 SET ROLE sys_usr;
@@ -46,7 +46,7 @@ SET ROLE sys_usr;
 -- SECURITY DEFINER
 -- SET search_path = sys_call, pg_temp;
 -- RESET ROLE;
--- (Função que realiza o login por meio de variáveis de função acima)
+-- (Função que realiza o login por meio de variáveis de sessão acima)
 
 -- LOGIN 
 
