@@ -19,7 +19,12 @@ $$
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = sys_call, pg_temp;
+
 RESET ROLE;
+REVOKE CREATE 
+    ON SCHEMA sys_call
+    FROM sys_reg_usr;
+
 
 -- EDITAR PERFIL (CALL_USER TABLE)
 
@@ -52,6 +57,11 @@ INSTEAD OF UPDATE ON sys_call.view_update_t_call_user_r_sys_reg_usr
 FOR EACH ROW
 EXECUTE FUNCTION sys_call.view_update_function_t_call_user_r_sys_reg_usr();
 
+RESET ROLE;
+REVOKE CREATE 
+    ON SCHEMA sys_call
+    FROM sys_reg_usr;
+
 -- DELETAR PERFIL 
 SET ROLE sys_reg_usr;
 
@@ -66,7 +76,12 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = sys_call, pg_temp;
 
--- =========== CONTACT TABLE ============
+RESET ROLE;
+REVOKE CREATE 
+    ON SCHEMA sys_call
+    FROM sys_reg_usr;
+
+-- =========== CONTACT TABLE ===========
 
 -- ADICIONAR CONTATO
 
@@ -94,6 +109,11 @@ INSTEAD OF INSERT ON sys_call.view_insert_t_contact_r_sys_reg_usr
 FOR EACH ROW
 EXECUTE FUNCTION sys_call.view_insert_function_t_contact_r_sys_reg_usr();
 
+RESET ROLE;
+REVOKE CREATE 
+    ON SCHEMA sys_call
+    FROM sys_reg_usr;
+
 -- VER CONTATO 
 SET ROLE sys_reg_usr;
 CREATE OR REPLACE FUNCTION 
@@ -110,7 +130,12 @@ $$
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = sys_call, pg_temp;
+
 RESET ROLE;
+REVOKE CREATE 
+    ON SCHEMA sys_call
+    FROM sys_reg_usr;
+
 
 -- EDITAR CONTATO
 
@@ -140,6 +165,7 @@ INSTEAD OF UPDATE ON sys_call.view_update_t_contact_r_sys_reg_usr
 FOR EACH ROW
 EXECUTE FUNCTION sys_call.view_update_function_t_contact_r_sys_reg_usr();
 
+RESET ROLE;
 REVOKE CREATE 
     ON SCHEMA sys_call
     FROM sys_reg_usr;
@@ -156,4 +182,18 @@ $$
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = sys_call, pg_temp;
+
+RESET ROLE;
+REVOKE CREATE 
+    ON SCHEMA sys_call
+    FROM sys_reg_usr;
+
+-- =========== CALL_HISTORY TABLE ===========
+
+-- Inserir registro no historico de chamadas
+
+CREATE OR REPLACE TRIGGER view_insert_trigger_t_call_history_r_sys_reg_usr
+INSTEAD OF INSERT ON sys_call.view_insert_t_call_history_r_sys_reg_usr
+FOR EACH ROW
+EXECUTE FUNCTION sys_call.view_insert_function_t_call_history_r_sys_reg_usr();
 
