@@ -92,4 +92,7 @@ CREATE TABLE sys_call.call_user(
     ON DELETE RESTRICT
  );
 
-
+ -- Declaração de chave unica composta
+ ALTER TABLE sys_call.contact 
+    ADD CONSTRAINT cuq_s_sys_call_t_contact_c_owner_user_saved_user
+    UNIQUE (owner_user, saved_user);

@@ -71,8 +71,8 @@
  CHECK (status IN('U', 'B'));
 
  -- Garante que o status do historico de ligações seja sempre R ou A (Refused ou Accepted)
- ALTER TABLE sys_call.contact
- ADD CONSTRAINT check_s_sys_call_t_contact_c_status
+ ALTER TABLE sys_call.call_history
+ ADD CONSTRAINT check_s_sys_call_t_call_history_c_status
  CHECK (status IN('R', 'A'));
 
  
