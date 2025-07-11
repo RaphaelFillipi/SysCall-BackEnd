@@ -31,7 +31,7 @@ CREATE TABLE sys_call.call_user(
 
  -- CRIANDO TABELA DE CONTATOS
 
-  CREATE TABLE sys_call.contact(
+CREATE TABLE sys_call.contact(
   -- Chaves primárias 
   id INTEGER GENERATED ALWAYS AS IDENTITY, 
   
@@ -40,22 +40,22 @@ CREATE TABLE sys_call.call_user(
   status     CHAR(1)     DEFAULT 'U' ,
                           
   -- Chaves estrangeiras 
-  saved_user INTEGER     NOT NULL,
-  owner_user INTEGER     NOT NULL,
+  saved_user UUID     NOT NULL,
+  owner_user UUID     NOT NULL,
   
   -- Declaração das chaves primárias 
   CONSTRAINT s_sys_call_t_contact PRIMARY KEY (id),
   
   -- Declaração de chaves estrangeiras 
-  CONSTRAINT fk_s_sys_call_t_call_user_c_saved_user
+  CONSTRAINT fk_s_auth_t_users_c_saved_user
     FOREIGN KEY (saved_user)
-    REFERENCES sys_call.call_user(user_id)
+    REFERENCES auth.users(id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT, 
     
-  CONSTRAINT fk_s_sys_call_t_call_user_c_owner_user
+  CONSTRAINT fk_s_auth_t_users_c_owner_user
     FOREIGN KEY (owner_user)
-    REFERENCES sys_call.call_user(user_id)
+    REFERENCES auth.users(id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT
  );
@@ -70,10 +70,11 @@ CREATE TABLE sys_call.call_user(
  -- Dados do histórico de chamada
  status CHAR(1) NOT NULL, 
  date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ duration INTEGER NOT NULL,
  
  -- Chaves estrangeiras
- recived_user   INTEGER NOT NULL,
- requester_user INTEGER NOT NULL,
+ recived_user   UUID NOT NULL,
+ requester_user UUID NOT NULL,
  
  -- Declaração das chaves primárias 
  CONSTRAINT s_sys_call_t_call_history PRIMARY KEY (id),
@@ -81,13 +82,13 @@ CREATE TABLE sys_call.call_user(
  -- Declaração das chaves estrangeiras 
  CONSTRAINT fk_s_sys_call_t_call_history_c_recived_user
     FOREIGN KEY (recived_user)
-    REFERENCES sys_call.call_user(user_id)
+    REFERENCES auth.users(id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT,
  
  CONSTRAINT fk_s_sys_call_t_call_history_c_requester_user
     FOREIGN KEY (requester_user)
-    REFERENCES sys_call.call_user(user_id)
+    REFERENCES auth.users(id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT
  );
