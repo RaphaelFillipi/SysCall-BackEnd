@@ -1,0 +1,71 @@
+{
+    "README": {
+        "1.0": "SOBRE ESTE ARQUIVO",
+        "1.1": "Este arquivo documenta as row-permissions do schema sys_call do projeto SysCall",
+        "1.2": "Ele possui as row-permissions das tabelas contact e call_history, separadas por ROLE e operação (CRUD)",
+        "1.3": "A distância padrão entre cada tabela é de cinco quebras de linha",
+
+        "2.0": "ESTRUTURA DE HIERARQUIA",
+        "2.1": "A primeira propriedade de uma hierarquia, com exceção da README, sempre é uma tabela",
+        "2.2": "A segunda propriedade de uma hierarquia sempre é PERMISSION",
+        "2.3": "A terceira propriedade de uma hierarquia sempre são os ROLEs",
+        "2.4": "A quarta propriedade de uma hierarquia sempre são as operações (CRUD)",
+        "2.5": "As propriedades abaixo da quarta propriedade são as configurações de permissões",
+
+        "3.0": "ORGANIZAÇÃO DE PROPRIEDADES (ROLES - TERCEIRA PROPRIEDADE HIERÁRQUICA)",
+        "3.1": "Dentro de uma terceira propriedade hierárquica com vários ROLEs, nomes de ROLEs de maior privilégio são escritos na frente",
+        "3.2": "Se há apenas um ROLE numa terceira propriedade hierárquica, apenas aquele ROLE tem essa permissão",
+        "3.3": "Se há vários ROLEs para uma terceira propriedade hierárquica, essa permissão é igual para todos eles",
+        "3.4": "As primeiras terceiras propriedades hierárquicas de cada PERMISSION são as que possuem mais ROLEs. As que possuem menos ROLEs são escritas depois",
+
+        "4.0": "ORGANIZAÇÃO DE PROPRIEDADES (OPERAÇÕES - QUARTA PROPRIEDADE HIERÁRQUICA)",
+        "4.1": "Se várias operações são escritas dentro de uma mesma quarta propriedade hierárquica, elas devem seguir a ordem de escrita \"insert\", \"select\", \"pre-update\", \"pos-update\", \"delete\"",
+        "4.4": "Quartas propriedades hierárquicas com várias operações devem ficar no topo de uma terceira propriedade hierárquica, de acordo com qual tem o maior número de operações",
+        "4.3": "Operações isoladas, dentro de uma terceira propriedade hierárquica, devem ser escritas na ordem \"insert\", \"select\", \"pre-update\", \"pos-update\", \"delete\". No caso, inserts devem estar acima de selects, selects devem estar acima de pre-updates e assim por diante",
+        
+        "5.0": "ORGANIZAÇÃO DE PROPRIEDADES (CONFIGURAÇÕES DE PERMISSÕES)",
+        "5.1": "As configurações de permissões seguem a sintaxe padrão de permissões do Hasura",
+        "5.2": "Por fins de organização, claims ficam antes de outras permissões",
+        "5.3": "Se existir, o claim X-HASURA-USER-ID deve ser a primeira permissão, seguida do claim X-HASURA-TENANT-NOW-ID",
+        "5.4": "Depois dos claims, devem ser configuradas as propriedades, de acordo com a ordem em que aparecem na tabela",
+
+        "6.0": "COMO USAR ESTE ARQUIVO",
+        "6.1": "Toda row-permission escrita no Hasura deve ser documentada por aqui para fins de backup, visualização e documentação",
+        "6.2": "Você pode copiar as permissões deste arquivo e colá-las diretamente no Hasura",
+        "6.3": "Para colá-las no Hasura, copie a configuração de permissão a partir da abertura da chave da quarta propriedade hierárquica até o fechamento dessa chave"
+    },
+
+
+
+
+
+    "contact": {
+    "permission": {
+        "reg_usr": {
+            "insert, select, update, delete": {
+                "owner_user": {
+                    "_eq": "X-Hasura-User-Id"
+                }
+            }
+        }
+    }
+},
+
+
+
+
+
+"call_history": {
+    "permission": {
+        "reg_usr": {
+            "insert, select": {
+                "requester_user": {
+                    "_eq": "X-Hasura-User-Id"
+                }
+            }
+        }
+    }
+}
+
+
+}
