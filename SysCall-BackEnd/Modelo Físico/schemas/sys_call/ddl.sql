@@ -58,8 +58,10 @@ CREATE TABLE sys_call.contact(
     REFERENCES auth.users(id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT
- );
 
+  -- Declaração de chaves únicas compostas 
+  CONSTRAINT cuq_s_sys_call_t_contact_c_owner_saved    UNIQUE (owner_user, saved_user);
+ );
 
 -- CRIANDO A TABELA DE HISTORICO DE CONTATOS 
 

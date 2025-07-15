@@ -197,3 +197,25 @@ INSTEAD OF INSERT ON sys_call.view_insert_t_call_history_r_sys_reg_usr
 FOR EACH ROW
 EXECUTE FUNCTION sys_call.view_insert_function_t_call_history_r_sys_reg_usr();
 
+-- Ver registros no historico de chamadas 
+
+SET ROLE sys_reg_usr;
+CREATE OR REPLACE FUNCTION 
+sys_call.function_select_t_call_history_r_sys_reg_usr(contact_id INTEGER)
+RETURNS TABLE(id INTEGER, status VARCHAR(2), date TIMESTAMP, duration INTERVAL, recived_user UUID, requester_user UUID) AS $$
+BEGIN 
+    RETURN QUERY 
+    SELECT 
+        sys_call.id, sys_call.status, sys_call.date, sys_call.duration, sys_call.recived_user, sys_call.requester_user
+    FROM sys_call.contact sys_call
+    WHERE sys_call.id = contact_id;
+END;
+$$
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sys_call, pg_temp;
+
+RESET ROLE;
+REVOKE CREATE 
+    ON SCHEMA sys_call
+    FROM sys_reg_usr;
