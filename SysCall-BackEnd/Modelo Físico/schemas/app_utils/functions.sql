@@ -64,3 +64,53 @@ CREATE OR REPLACE TRIGGER trg_set_locale
 BEFORE INSERT OR UPDATE ON auth.users
 FOR EACH ROW
 EXECUTE FUNCTION set_default_locale();
+
+
+CREATE OR REPLACE FUNCTION sys_call.random_call_duration()
+RETURNS INTERVAL AS $$
+DECLARE
+  call_status CHAR := sys_call.random_call_status();
+  seconds INT;
+BEGIN
+  IF call_status = 'R' THEN
+    RETURN INTERVAL '00:00:00';
+  ELSE
+    seconds := floor(random() * (600 - 10 + 1) + 10)::int;
+    RETURN make_interval(secs => seconds);
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION sys_call.random_call_status()
+RETURNS CHAR AS $$
+BEGIN
+  RETURN CASE
+    WHEN random() < 0.5 THEN 'A'
+    ELSE 'R'
+  END;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION sys_call.set_random_status_and_duration()
+RETURNS TRIGGER AS $$
+DECLARE
+  seconds INT;
+BEGIN
+  IF random() < 0.5 THEN
+    NEW.status := 'A';
+    seconds := floor(random() * (600 - 10 + 1) + 10)::int;
+    NEW.duration := make_interval(secs => seconds);
+  ELSE
+    NEW.status := 'R';
+    NEW.duration := INTERVAL '00:00:00';
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_set_status_and_duration
+BEFORE INSERT ON sys_call.call_history
+FOR EACH ROW
+WHEN (NEW.status IS NULL OR NEW.duration IS NULL)
+EXECUTE FUNCTION sys_call.set_random_status_and_duration();

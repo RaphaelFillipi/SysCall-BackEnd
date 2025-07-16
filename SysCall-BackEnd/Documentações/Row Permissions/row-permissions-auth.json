@@ -43,7 +43,7 @@
     "permission": {
         "usr": {
             "insert, select": {
-                "without any checks"
+                 
             }
         }
     }
